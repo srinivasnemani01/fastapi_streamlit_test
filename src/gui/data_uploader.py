@@ -1,7 +1,7 @@
 import streamlit as st
 from fastapi import HTTPException
 import pandas as pd
-from gui.generic_webpage import IWebPage
+from gui.webpage_interface import IWebPage
 import requests
 import os
 import io        
@@ -9,6 +9,12 @@ import json
 from util.file_read_util import DataProcessingUtilities
 
 class DataUploadPage(IWebPage):
+    """
+        The DataAnalysisPage class is a subclass of the 'IWebPage' abstract base class. It renders a web page 
+        to give option to upload the market data from a CSV or Excel. When any other file formatters are 
+        provided it shows an error messages. When the data is successfully uploaded, it shows the uploaded data 
+        in a data frame.
+    """    
     def __init__(self, config_file, session_state):
         super().__init__(config_file=config_file, session_state=session_state)
         self.file = None      

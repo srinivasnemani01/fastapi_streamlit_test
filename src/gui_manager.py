@@ -3,12 +3,27 @@ import streamlit as st
 from gui.data_uploader import DataUploadPage
 from gui.data_analysis import DataAnalysisPage
 
-class MarketDataAnalysisApp:
+
+class MarketDataAnalysisWebApp:
+    """
+    A class to manage the Market Data Analysis App, providing functionalities for data uploading and option data analysis.
+
+    The MarketDataAnalysisWebApp class reads the configuration file to link various api endpionts with the 
+    event handling logic.
+    """
     def __init__(self, config):
+        """
+        Initializes the MarketDataAnalysisApp with the given configuration.
+        Args:
+            config: The configuration for the application.
+        """
         self.config = config
         st.set_page_config(page_title="Market data analysis", layout="wide")
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Runs the Market Data Analysis App, rendering the page according to the selected tab.
+        """
         tab_gui_mapping = {
             "Upload data": DataUploadPage,
             "Data analysis": DataAnalysisPage
@@ -24,5 +39,5 @@ class MarketDataAnalysisApp:
 if __name__ == "__main__":
     config = configparser.ConfigParser()
     CONFIG_FILE = 'config.ini'
-    app = MarketDataAnalysisApp(CONFIG_FILE)
-    app.run()    
+    app = MarketDataAnalysisWebApp(CONFIG_FILE)
+    app.run()

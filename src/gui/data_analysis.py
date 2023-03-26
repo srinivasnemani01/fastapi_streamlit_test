@@ -2,17 +2,24 @@ import configparser
 import requests
 from fastapi import HTTPException
 import streamlit as st
-from gui.generic_webpage import IWebPage
+from gui.webpage_interface import IWebPage
 import pandas as pd
 import json
 from datetime import datetime
-from bokeh.plotting import figure, show
-from bokeh.models import ColumnDataSource, RadioGroup, LinearAxis, Range1d, Label, Span, Legend, LegendItem, CustomJS, Button, Row
+from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource, Span, Label, Legend
 import base64
 import numpy as np
 
-
 class DataAnalysisPage(IWebPage):
+
+    """
+    The code defines a DataAnalysisPage class which inherits from an IWebPage class. 
+    This web page contains options to fetch and dispaly unique number of data dates available in the database.
+    When user selects a particular date, it calculates the option prices and shows the data in tabular format.
+    It also shows the option prices in graphs and provides options to download the data.
+    """
+    
     def __init__(self, config_file, session_state):
         super().__init__(config_file, session_state)
 
@@ -46,7 +53,6 @@ class DataAnalysisPage(IWebPage):
                     host = self.config.get("API", "host")
                     port = self.config.get("API", "port")
                     url_fetch_unique_dates =  "http://" + host + ":" + port  + config_url_fetch_unique_dates                
-                    st.write(url_fetch_unique_dates)
                     #url_fetch_unique_dates = "http://127.0.0.1:8080/fetchuniqutedates/"
                     response_unique_dates = requests.get(url_fetch_unique_dates)
                     response_unique_dates_str = response_unique_dates.text
@@ -72,10 +78,13 @@ class DataAnalysisPage(IWebPage):
 
 
                 if st.session_state["page2_selected_date"] is not None:                
+                    st.write("\n")#Add few extra lines of blank space for visual appeal.
+                    st.write("\n")
+                    st.write("\n")
                     st.write(f"Selected Date is: ", st.session_state.page2_selected_date)
                     
                     
-                if st.button("Fecth Option Data for the Selected Dates"):
+                if st.button("Fecth the Option price data for the selected date"):
                     try:
                         if st.session_state["page2_selected_date"] is not None:
                             #st.write(f"Feching market data for the Date is: ", st.session_state.page2_selected_date)
@@ -106,13 +115,10 @@ class DataAnalysisPage(IWebPage):
     def write_this_data_in_C1(self, container_R1, option_price_data_df):
         with container_R1:
             st.write(option_price_data_df)
-            
-            filename = "OptionPricesData"
-            csv = option_price_data_df.to_csv(index=False)
-            b64 = base64.b64encode(csv.encode()).decode()
-            href = f'option_price_data_df:file/csv;base64,{b64}'
-            st.download_button('Download Option Prices CSV', href, file_name='OptionPricesData.csv')            
-            
+            filename_option_prices = "OptionPricesData.csv"
+            csv = option_price_data_df.to_csv(index=False).encode('utf-8')
+            st.download_button('Press to Download Option Prices CSV', csv, filename_option_prices, "text/csv", key='download-csv')
+         
     def create_option_pricing_plot(self, container_R2, option_price_data_df):
         with container_R2:
             df = option_price_data_df
@@ -134,7 +140,8 @@ class DataAnalysisPage(IWebPage):
                 y_axis_min_point = min(y1) - y1_20pct_range
                 y_axis_max_point = max(y1) + y1_20pct_range
 
-                p = figure(title=f"{option_type} Option Price vs Current Price", x_axis_label='Strike Price', y_axis_label='Price', y_range=(y_axis_min_point, y_axis_max_point))
+                y_axis_label_adjusted = f"{option_type} Price"
+                p = figure(title=f"{option_type} Option Price vs Current Price", x_axis_label='Strike Price', y_axis_label=y_axis_label_adjusted, y_range=(y_axis_min_point, y_axis_max_point))
 
                 p.line('x', 'y1', source=source, color='blue', line_width=2, legend_label=f'{option_type} Option Price')
                 vline = Span(location=chart_loc_current_price_line, dimension='height', line_color='orange', line_width=2, line_dash='dashed')

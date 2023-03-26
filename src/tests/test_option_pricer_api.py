@@ -6,9 +6,17 @@ from dbutil.optiondata_dao import DataPersistence
 import pandas as pd
 import json
 
+"""
+This module contains test cases for the OptionPricer class in the api.option_pricer module.
+It uses the MockDataPersistence_Call and MockDataPersistence_Put classes to provide mock data for testing.
+The test cases validate the correctness of the calculate_market_prices method for both call and put options.
+"""
+
 # Mock DataPersistence class to avoid database calls
 class MockDataPersistence_Call(DataPersistence):
-
+    """
+    A mock DataPersistence class for call options that returns sample data instead of making database calls.
+    """
     def fetch_records(self, *args, **kwargs):
         # Return sample data instead of making a database call
         data = {
@@ -38,8 +46,11 @@ class MockDataPersistence_Call(DataPersistence):
         # Do nothing or return a default value
         pass
         
-class MockDataPersistence_Put(DataPersistence):
 
+class MockDataPersistence_Put(DataPersistence):
+    """
+    A mock DataPersistence class for put options that returns sample data instead of making database calls.
+    """
     def fetch_records(self, *args, **kwargs):
         # Return sample data instead of making a database call
         data = {
@@ -68,18 +79,33 @@ class MockDataPersistence_Put(DataPersistence):
 
 @pytest.fixture
 def option_pricer_call():
+    """
+    Pytest fixture for initializing an instance of OptionPricer with the MockDataPersistence_Call instance.
+    Returns: OptionPricer instance.
+    """
     mock_persistence = MockDataPersistence_Call()
     return OptionPricer(mock_persistence)
 
-
 @pytest.fixture
 def option_pricer_put():
+    """
+    Pytest fixture for initializing an instance of OptionPricer with the MockDataPersistence_Put instance.
+    Returns: OptionPricer instance.
+    """
     mock_persistence = MockDataPersistence_Put()
     return OptionPricer(mock_persistence)
 
-
 @pytest.mark.asyncio
 async def test_validate_call_prices(option_pricer_call):
+
+    """
+    Test case for the calculate_market_prices method of the OptionPricer class for call options.
+    It checks whether the calculated option price is equal to the expected call option value within
+     tolerance levels
+    Args:
+    option_pricer_call (OptionPricer): Instance of the OptionPricer class initialized with MockDataPersistence_Call.
+    """
+
     date_as_of = 20220101
     CALL_OPTION_VALUE = 0.1068075255
     response = await option_pricer_call.calculate_market_prices(date_as_of)
@@ -100,6 +126,10 @@ async def test_validate_call_prices(option_pricer_call):
 
 @pytest.mark.asyncio
 async def test_validate_put_prices(option_pricer_put):
+    """
+        Check the comments/docstrings of  test_validate_call_prices. Similar to it.
+    """
+
     date_as_of = 20220101
     PUT_OPTION_VALUE = 19.11287473
     response = await option_pricer_put.calculate_market_prices(date_as_of)
