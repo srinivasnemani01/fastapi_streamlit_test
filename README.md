@@ -13,10 +13,12 @@ python -m pip install -r ./requirements.txt
 ### Running the application
 
 ```
-**Activate Virtual Environment:**
+Activate Virtual Environment:
 .\.venv\Scripts\activate.ps1 
-**Run API server**
+
+Run API server
 python .\src\api_manager.py
-**Run Web server**
+
+Run Web server
 streamlit run .\src\gui_manager.py
 ```
