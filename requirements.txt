@@ -8,5 +8,8 @@ configparser
 requests
 streamlit
 scipy
+httpx
 python-multipart
 bokeh
+pytest
+pytest-asyncio
