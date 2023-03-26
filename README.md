@@ -3,8 +3,7 @@ fastapi_streamlit_test
 
 
 ### Build Setup in Windows
-
-Only first time you need to do 
+(needed only one time to setup the environment)
 
 ```
 python -m venv .venv
