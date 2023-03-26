@@ -1,0 +1,12 @@
+sqlalchemy
+fastapi
+pandas
+typing
+datetime
+uvicorn
+configparser
+requests
+streamlit
+scipy
+python-multipart
+bokeh
