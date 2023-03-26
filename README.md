@@ -10,19 +10,13 @@ python -m venv .venv
 .\.venv\Scripts\activate.ps1
 python -m pip install -r ./requirements.txt
 ```
-
-
-### Run 
+### Running the application
 
 ```
-.\.venv\Scripts\activate.ps1
+**Activate Virtual Environment:**
+.\.venv\Scripts\activate.ps1 
+**Run API server**
 python .\src\api_manager.py
-```
-
-
-### Docker run 
-
-```
-docker build -t streamlit-application .
-docker run streamlit-application 
+**Run Web server**
+streamlit run .\src\gui_manager.py
 ```
